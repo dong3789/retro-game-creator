@@ -46,8 +46,8 @@ docs/images/              검수 스크린샷 (위 GIF 포함)
 ## 30초 시작
 
 ```bash
-git clone https://github.com/dong3789/gbc-game-creator.git
-cd gbc-game-creator
+git clone https://github.com/dong3789/retro-game-creator.git
+cd retro-game-creator
 
 ./tools/check_env.sh                 # 뭐가 깔려 있고 뭐가 없는지
 ./templates/minimal-gbc/build.sh     # 예제 ROM 빌드 → build/tile-hop.gbc

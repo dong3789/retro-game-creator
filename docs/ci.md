@@ -25,7 +25,7 @@ refusing to allow a GitHub App to create or update workflow
 
 In that case, paste the file once through the web UI (this immediately triggers a run):
 
-1. Open <https://github.com/dong3789/gbc-game-creator/new/main/.github/workflows>
+1. Open <https://github.com/dong3789/retro-game-creator/new/main/.github/workflows>
 2. File name: `build-rom.yml`
 3. Paste the content below, commit to `main`
 
