@@ -1,147 +1,173 @@
-# R36S GBC 크리에이터
+# Retro Game Creator
 
-> AI에게 게임을 시키면 **진짜 게임보이 컬러 ROM(`.gbc`)** 이 나오고, 그게 R36S나 아무 에뮬레이터에서 바로 돌아갑니다.
-> A skill kit that turns an AI coding agent into a Game Boy Color game developer — build, playtest, ship.
+**English** · [한국어](docs/README.ko.md) · [日本語](docs/README.ja.md) · [简体中文](docs/README.zh.md) · [Português](docs/README.pt.md) · [Français](docs/README.fr.md) · [العربية](docs/README.ar.md) · [हिन्दी](docs/README.hi.md)
 
-![TILE HOP gameplay](docs/images/gameplay.gif)
+**Tell an AI coding agent to make a game and you get a real Game Boy Color ROM (`.gbc`).**
 
-OpenAI × ModRetro가 Chromatic(게임보이 하드웨어 호환 휴대기기)으로 보여 준 "AI가 C를 쓰고 → GBDK로 ROM을 굽고 → 에뮬레이터 프레임을 눈으로 검수한다"는 흐름을,
-**$200 기기를 사지 않고 이미 있는 R36S에서** 그대로 쓰도록 만든 오픈 스킬킷입니다.
-스킬 문서(`SKILL.md`) + 자동화 도구 3개 + 실제로 빌드·플레이테스트까지 통과한 예제 게임이 들어 있습니다.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/output-.gbc-8b6b2e.svg" alt="Output: .gbc ROM">
+  <img src="https://img.shields.io/badge/compiler-GBDK--2020%204.5.0-2f9e44.svg" alt="Compiler: GBDK-2020 4.5.0">
+  <img src="https://img.shields.io/badge/agents-Claude%20Code%20%2B%20Codex-6e56cf.svg" alt="Agents: Claude Code and Codex">
+</p>
+
+<p align="center">
+  <img src="docs/images/gameplay.gif" width="480" alt="TILE HOP, the example game, running in an emulator">
+</p>
+
+One skill document (`SKILL.md`), three automation tools, and an example game that has actually been built and playtested.
+
+It takes the workflow OpenAI × ModRetro's [Chromatic](https://openai.com/en-US/supply/co-lab/chromatic/) (a Game Boy hardware-compatible handheld) showed off — the AI writes C, GBDK burns a ROM, and the emulator's frames get checked by eye — and makes it run on hardware you already own instead of a $200 device.
+
+`R36S · Miyoo Mini · Anbernic · iPhone (Delta) · desktop and web emulators · real hardware` — one `.gbc` file runs on all of them.
 
 ---
 
-## 들어 있는 것
-
-```
-SKILL.md                  AI 에이전트용 본문 — 하드웨어 제약, GBDK API, 제작·검수 루프
-AGENTS.md / CLAUDE.md     Codex · Claude Code가 레포 루트에서 바로 읽는 요약 규칙
-tools/
-  png2gbc.py              PNG → 8×8 2bpp 타일 + BGR555 팔레트 C 코드 (+ 타일 그리드 미리보기)
-  artfont.py              5×7 픽셀 폰트로 로고·문구를 PNG에 그리기
-  playtest.py             PyBoy 헤드리스 실행 + 키 입력 시퀀스 + 스크린샷 스트립
-  check_env.sh            GBDK / python / pillow / pyboy 점검
-templates/minimal-gbc/    실제로 도는 예제 게임 "TILE HOP" (타이틀 → 플레이 → 점수 → 클리어)
-docs/images/              검수 스크린샷 (위 GIF 포함)
-.github/workflows/        푸시할 때마다 ROM을 빌드해 아티팩트로 올리는 CI
-```
-
-## 예제 게임 — TILE HOP
-
-| | |
-| --- | --- |
-| 조작 | 방향키 이동, `START` 시작, `SELECT` 타이틀로 |
-| 목표 | 별 6개를 다 먹으면 `CLEAR!`, 별이 다시 깔리고 점수 리셋 (무한 반복) |
-| 구현된 것 | 컬러 팔레트 5종, BG/OBJ 팔레트 분리, 타일 충돌, 스프라이트 애니메이션, 사운드, HUD |
-| 크기 | ROM 32 KiB, 타일 182개 / VRAM 384개 |
-
-| 타이틀 | 플레이 | 클리어 |
-| --- | --- | --- |
-| ![title](docs/images/title-screen.png) | ![strip](docs/images/playtest-strip.png) | ![clear](docs/images/clear-screen.png) |
-
-오른쪽 스트립은 `tools/playtest.py`가 실제로 ROM을 돌리며 찍은 프레임입니다 —
-타이틀 → 시작 → 오른쪽으로 걸어가 별 획득(SCORE 00→01, STAR 6→5) → 이동 → 타이틀 복귀.
-**"빌드됐다"가 아니라 "화면에서 확인했다"** 가 이 킷의 기준입니다.
-
-## 30초 시작
+## Quick start (30 seconds)
 
 ```bash
 git clone https://github.com/dong3789/retro-game-creator.git
 cd retro-game-creator
 
-./tools/check_env.sh                 # 뭐가 깔려 있고 뭐가 없는지
-./templates/minimal-gbc/build.sh     # 예제 ROM 빌드 → build/tile-hop.gbc
+./tools/check_env.sh                 # GBDK, python, pillow, pyboy
+./templates/minimal-gbc/build.sh     # build the example ROM → build/tile-hop.gbc
 
 python3 tools/playtest.py --rom templates/minimal-gbc/build/tile-hop.gbc \
   --script "wait:8,press:start:4,wait:16,hold:right:36,snap:score" \
   --out build/strip.png
 ```
 
-`build/strip.png`를 열어 보세요. 이게 게임입니다.
+Open `build/strip.png`. That is the game.
 
-GBDK-2020은 <https://github.com/gbdk-2020/gbdk-2020/releases> 에서 받아 아무 데나 풀고
-`export GBDKDIR=/경로/gbdk/` ( **끝에 `/` 꼭** ) 하면 됩니다. `build.sh`가 `/opt/gbdk`, `~/gbdk` 등도 알아서 찾습니다.
-`make`가 없어도 `build.sh`로 빌드됩니다.
+Get GBDK-2020 from the [releases page](https://github.com/gbdk-2020/gbdk-2020/releases), unpack it anywhere, and
+`export GBDKDIR=/path/to/gbdk/` (**keep the trailing `/`**). `build.sh` also looks in `/opt/gbdk`, `~/gbdk` and a few other places, and builds fine without `make`.
 
-## AI 에이전트에 붙이기
+## The example game — TILE HOP
 
-| 도구 | 하는 일 |
+Not an empty shell: a game that goes all the way from title screen to play, score and clear. Copy it and start changing things.
+
+| | |
 | --- | --- |
-| **Claude Code** | 레포에서 열면 `CLAUDE.md`를 읽습니다. "TILE HOP 복사해서 슈팅 게임으로 바꿔줘"처럼 시키면 `SKILL.md` 규칙대로 진행합니다. |
-| **Codex / 기타** | `AGENTS.md`를 읽습니다. 안 읽는 도구라면 대화 첫머리에 `SKILL.md`를 읽으라고 한 줄 붙이면 됩니다. |
-| **Claude Skill 형식** | `SKILL.md`가 frontmatter(`name`, `description`)를 갖춘 표준 스킬 문서라 그대로 스킬 폴더에 넣어도 됩니다. |
+| Controls | D-pad to move, `START` to start, `SELECT` back to the title |
+| Goal | Eat all 6 stars for `CLEAR!`, then the stars are re-dealt and the score resets (endless) |
+| What's in it | 5 colour palettes, separate BG/OBJ palettes, tile collision, sprite animation, sound, HUD |
+| Size | ROM 32 KiB · 182 of 384 VRAM tiles |
 
-스킬이 강제하는 것: 384타일 VRAM 예산, 4색/타일, 8×8 정렬, OAM 40개·스캔라인 10개,
-`vsync()` 루프, CGB 레지스터 가드, 그리고 **빌드 후 반드시 플레이테스트 스트립을 눈으로 볼 것**.
+| Title | Play | Clear |
+| --- | --- | --- |
+| ![title](docs/images/title-screen.png) | ![strip](docs/images/playtest-strip.png) | ![clear](docs/images/clear-screen.png) |
 
-## R36S에 넣기
+The strip on the right is frames `tools/playtest.py` captured while actually running the ROM —
+title → start → walk right and grab a star (SCORE 00→01, STAR 6→5) → move → back to the title.
+**"It renders on screen" is the bar, not "it compiled."**
 
-1. 마이크로SD를 PC에 꽂고 **EASYROMS** 파티션을 엽니다 (`BOOT` 파티션이 아닙니다).
-2. GBC 폴더에 `.gbc`를 복사합니다 — 보통 `EASYROMS/roms/gbc/` (이미지에 따라 `EASYROMS/gbc/`).
-   폴더 이름은 소문자·대소문자를 구분합니다. 게임이 안 보이면 롬이 아니라 폴더가 틀린 겁니다.
-3. 실행. 코어는 **Gambatte**(기본, 무난) 또는 **SameBoy**(가장 정확).
-4. 화면 설정: GBC는 160×144 = 정확히 **10:9**, R36S 패널은 640×480(4:3)입니다.
-   `설정 → 비디오 → 스케일링`에서 **Aspect Ratio: Core Provided + Integer Scale: ON → 480×432 (3배)**.
-   픽셀이 정사각으로 딱 떨어집니다. 4배(640×576)는 세로 480에 안 들어가서 결국 3배로 떨어집니다.
-   "화면 꽉 채우기"는 10:9를 4:3에 밀어넣어 약 20% 늘어납니다 — 픽셀아트에는 비추천.
+## Run it anywhere
 
-같은 ROM이 Miyoo Mini(Onion), Anbernic RG35XX, 데스크톱 `sameboy`/`mgba`, 실기 + 플래시카트에서도 그대로 돕니다.
+`.gbc` is a standard Game Boy Color ROM, so the same file runs everywhere below.
 
-## 만드는 순서 (스킬에 적힌 루프)
+| Device | How |
+| --- | --- |
+| **R36S (ArkOS)** | Copy into the GBC folder on the microSD's `EASYROMS` partition → Gambatte or SameBoy core (details below) |
+| **Miyoo Mini (Onion), Anbernic RG35XX, …** | Same idea — drop it in the handheld's GBC ROM folder |
+| **iPhone / iPad** | Open the `.gbc` in the Delta app |
+| **PC / Mac** | SameBoy, mGBA |
+| **Real hardware** | Game Boy Color + a flash cart |
 
-1. **기획 한 문단 + 합격 기준 한 줄** — "오른쪽으로 36프레임 걸으면 별을 먹고 점수가 0→1이 된다"
-2. **PNG 아트** → `tools/png2gbc.py`로 타일·팔레트 변환, 미리보기로 눈 확인
-3. **C 코드** — `templates/minimal-gbc/src/main.c`를 복사해서 고침
-4. **빌드** — `./build.sh` (lcc)
-5. **플레이테스트** — 키 입력 스크립트 실행 → 스트립 PNG 생성
-6. **스트립을 직접 열어 검수** → 고치고 반복
-7. **증거 남기기** — 스트립/스크린샷을 `docs/images/`에, README에 링크
+### Putting it on an R36S
 
-## 도구 세 개
+1. Put the microSD in your PC and open the **EASYROMS** partition (not `BOOT`).
+2. Copy the `.gbc` into the GBC folder — usually `EASYROMS/roms/gbc/`, sometimes `EASYROMS/gbc/` depending on the image.
+   Folder names are case-sensitive. If the game doesn't show up, the folder is wrong, not the ROM.
+3. Launch it. Use the **Gambatte** core (default, fine) or **SameBoy** (most accurate).
+4. Display: GBC is 160×144, exactly **10:9**, while the R36S panel is 640×480 (4:3).
+   In `Settings → Video → Scaling`, set **Aspect Ratio: Core Provided** and **Integer Scale: ON → 480×432 (3×)**.
+   Pixels land on a clean square grid. 4× (640×576) doesn't fit in 480 rows, so it falls back to 3× anyway.
+   "Fill the screen" stretches 10:9 into 4:3, about 20% wider — not recommended for pixel art.
+
+## What's in the repo
+
+```
+SKILL.md                  the agent-facing guide — hardware limits, GBDK API, build/playtest loop
+AGENTS.md / CLAUDE.md     summary rules Codex and Claude Code read at the repo root
+tools/
+  png2gbc.py              PNG → 8×8 2bpp tiles + BGR555 palette C code (+ tile-grid preview)
+  artfont.py              draw logos and text into a PNG with a 5×7 pixel font
+  playtest.py             headless PyBoy run + key-input script + screenshot strip
+  check_env.sh            check GBDK / python / pillow / pyboy
+templates/minimal-gbc/    the working example game "TILE HOP" (title → play → score → clear)
+docs/images/              review screenshots (including the GIF above)
+docs/ci.md                the full CI workflow + how to register it once (not in the repo yet)
+```
+
+## Hook it up to your agent
+
+| Tool | How it gets read |
+| --- | --- |
+| **Claude Code** | Open the repo and it reads `CLAUDE.md`. Ask for something like "copy TILE HOP and turn it into a shooter" and it follows the rules in `SKILL.md`. |
+| **Codex / other agents** | They read `AGENTS.md`. If yours reads neither, paste one line at the start of the chat telling it to read `SKILL.md`. |
+| **Claude Skill format** | `SKILL.md` carries frontmatter (`name`, `description`), so it drops straight into a skills folder as-is. |
+
+What the skill enforces: a 384-tile VRAM budget, 4 colours per tile, 8×8 alignment, 40 OAM entries with 10 per scanline,
+a `vsync()` loop, CGB register guards, and **always look at the playtest strip after a build**.
+
+## The loop (as written in the skill)
+
+1. **One paragraph of design + one pass/fail line** — "walk right for 36 frames, eat a star, and the score goes 0→1"
+2. **PNG art** → convert tiles and palettes with `tools/png2gbc.py`, check the preview by eye
+3. **C code** — copy `templates/minimal-gbc/src/main.c` and change it
+4. **Build** — `./build.sh` (lcc)
+5. **Playtest** — run a key-input script → get a strip PNG
+6. **Open the strip yourself** → fix and repeat
+7. **Keep the evidence** — strips and screenshots in `docs/images/`, linked from the README
+
+## Three tools
 
 ```bash
-# 1) 아트:  sprite는 3색+투명, bg는 4색. --dedup으로 타일 중복 제거, --palette로 팔레트 고정
+# 1) art: sprites are 3 colours + transparent, backgrounds 4 colours.
+#    --dedup merges duplicate tiles, --palette pins the palette
 python3 tools/png2gbc.py assets/player.png --mode sprite --name player -o src/gen/player
 python3 tools/png2gbc.py assets/level.png  --mode bg --map --dedup --name level -o src/gen/level
 
-# 2) 글자: 로고/문구를 5×7 폰트로 PNG에 그리기 (정수 배율)
+# 2) text: draw logos and strings into a PNG with a 5×7 font (integer scale)
 python3 tools/artfont.py "PRESS START" --scale 2 --color "#FFEBC2" --out press.png
 
-# 3) 플레이테스트: wait/press/hold/release/snap
+# 3) playtest: wait / press / hold / release / snap
 python3 tools/playtest.py --rom build/tile-hop.gbc \
   --script "wait:40,press:start:4,wait:20,snap:play,hold:right:40,release:right,snap:score" \
   --out build/strip.png
 ```
 
-`playtest.py`는 "모든 프레임이 똑같다(= 입력이 안 들어간다)", "색이 2개 이하(= 팔레트/디스플레이 문제)",
-"빈 프레임" 같은 전형적 실패를 경고로 짚어 줍니다. 경고가 뜨면 버그로 보고 고치세요.
+`playtest.py` also calls out the classic failures: "every frame is identical (= input isn't reaching the game)",
+"two colours or fewer (= palette/display problem)", "blank frame". Treat a warning as a bug and fix it.
 
-## 하드웨어 요약 (자세한 건 `SKILL.md`)
+## Hardware cheat sheet (more in `SKILL.md`)
 
-| 항목 | 값 |
+| Item | Value |
 | --- | --- |
-| 화면 | 160×144 (20×18 타일) |
-| 타일 | 8×8, 2bpp = 타일당 4색, 16바이트 |
-| VRAM | 384타일(8 KiB) — 배경·스프라이트가 **같은 곳**을 씀 |
-| 팔레트 | BG 8개 + OBJ 8개 × 4색, BGR555 15비트 |
-| 스프라이트 | OAM 40개, **스캔라인당 10개** |
-| 프레임 | 59.7 fps, 약 70,224 사이클 |
-| 사운드 | 4채널 (스퀘어2·웨이브·노이즈) |
+| Screen | 160×144 (20×18 tiles) |
+| Tile | 8×8, 2bpp = 4 colours per tile, 16 bytes |
+| VRAM | 384 tiles (8 KiB) — background and sprites share **the same space** |
+| Palettes | 8 BG + 8 OBJ × 4 colours, BGR555 15-bit |
+| Sprites | 40 OAM entries, **10 per scanline** |
+| Frame | 59.7 fps, ~70,224 cycles |
+| Sound | 4 channels (2 square, 1 wave, 1 noise) |
 
 ## CI
 
-`.github/workflows/build-rom.yml` — 푸시/PR마다 우분투 러너에서 GBDK-2020 4.5.0을 받아
-`templates/minimal-gbc`를 빌드하고, ROM 헤더를 검사하고, PyBoy 플레이테스트(`--strict`)까지 돌린 뒤
-`.gbc`와 스크린샷 스트립을 아티팩트로 올립니다. 빌드 결과는 Actions 탭 → Artifacts에서 바로 받아 SD카드에 넣을 수 있습니다.
+[`docs/ci.md`](docs/ci.md) holds the full workflow — an Ubuntu runner pulls GBDK-2020 4.5.0, builds
+`templates/minimal-gbc`, checks the ROM header (size, title, cart type `0x1B`, CGB flag `0x80`), runs the
+PyBoy playtest with `--strict`, and uploads the `.gbc` and the screenshot strip as artifacts.
 
-현재 이 저장소에는 워크플로가 아직 등록되어 있지 않습니다 — 이 저장소를 처음 올린 GitHub 토큰에
-`workflows` 권한이 없어 GitHub이 해당 파일 푸시를 거부했습니다. 워크플로 전문과 1회 등록 방법은
-[`docs/ci.md`](docs/ci.md)에 있습니다 (웹 UI에서 파일 한 번 붙여넣으면 그때부터 매 푸시마다 실행됩니다).
+> This repo does not have `.github/workflows/build-rom.yml` **registered yet.** The GitHub token used for the
+> first push lacked the `workflows` permission, so GitHub rejected that file. Paste the file from `docs/ci.md`
+> into the web UI once, and it runs on every push from then on.
 
-## 크레딧
+## Credits
 
-- 컴파일러: [GBDK-2020](https://github.com/gbdk-2020/gbdk-2020) (SDCC 기반)
-- 에뮬레이터: [PyBoy](https://github.com/Baekalfen/PyBoy) — 헤드리스 검수용
-- 레퍼런스: Pan Docs (게임보이 하드웨어 문서), GBDK 2020 Docs
+- Compiler: [GBDK-2020](https://github.com/gbdk-2020/gbdk-2020) (on top of SDCC)
+- Emulator: [PyBoy](https://github.com/Baekalfen/PyBoy) — for headless review
+- References: Pan Docs (Game Boy hardware), GBDK 2020 Docs
+- Inspiration: OpenAI × ModRetro **Chromatic: Codex Edition**
 
-MIT License — [LICENSE](LICENSE) 참고. 게임을 만들고, 고치고, 팔아도 됩니다.
+MIT License — see [LICENSE](LICENSE). Build games, modify them, sell them.
+Questions and bugs go to [Issues](https://github.com/dong3789/retro-game-creator/issues); games you made with this kit are always welcome.
