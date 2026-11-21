@@ -1,0 +1,33 @@
+# build output
+build/
+*.gb
+*.gbc
+*.o
+*.ihx
+*.map
+*.lst
+*.sym
+*.asm
+*.rel
+*.noi
+*.cdb
+*.adb
+*.lk
+*.rst
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# local toolchain copies
+.tmp/
