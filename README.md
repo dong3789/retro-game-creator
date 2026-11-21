@@ -144,4 +144,4 @@ python3 tools/playtest.py --rom build/tile-hop.gbc \
 - 에뮬레이터: [PyBoy](https://github.com/Baekalfen/PyBoy) — 헤드리스 검수용
 - 레퍼런스: Pan Docs (게임보이 하드웨어 문서), GBDK 2020 Docs
 
-라이선스는 아직 정하지 않았습니다(저장소 소유자에게 문의).
+MIT License — [LICENSE](LICENSE) 참고. 게임을 만들고, 고치고, 팔아도 됩니다.
