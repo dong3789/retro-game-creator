@@ -131,8 +131,12 @@ python3 tools/playtest.py --rom build/tile-hop.gbc \
 ## CI
 
 `.github/workflows/build-rom.yml` — 푸시/PR마다 우분투 러너에서 GBDK-2020 4.5.0을 받아
-`templates/minimal-gbc`를 빌드하고, `.gbc`를 아티팩트로 올리고, PyBoy 플레이테스트까지 돌립니다.
-빌드 결과는 Actions 탭 → Artifacts에서 바로 받아 SD카드에 넣을 수 있습니다.
+`templates/minimal-gbc`를 빌드하고, ROM 헤더를 검사하고, PyBoy 플레이테스트(`--strict`)까지 돌린 뒤
+`.gbc`와 스크린샷 스트립을 아티팩트로 올립니다. 빌드 결과는 Actions 탭 → Artifacts에서 바로 받아 SD카드에 넣을 수 있습니다.
+
+현재 이 저장소에는 워크플로가 아직 등록되어 있지 않습니다 — 이 저장소를 처음 올린 GitHub 토큰에
+`workflows` 권한이 없어 GitHub이 해당 파일 푸시를 거부했습니다. 워크플로 전문과 1회 등록 방법은
+[`docs/ci.md`](docs/ci.md)에 있습니다 (웹 UI에서 파일 한 번 붙여넣으면 그때부터 매 푸시마다 실행됩니다).
 
 ## 크레딧
 
