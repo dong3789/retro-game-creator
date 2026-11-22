@@ -8,18 +8,72 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/output-.gbc-8b6b2e.svg" alt="Output: .gbc ROM">
   <img src="https://img.shields.io/badge/compiler-GBDK--2020%204.5.0-2f9e44.svg" alt="Compiler: GBDK-2020 4.5.0">
+  <img src="https://img.shields.io/badge/games_shipped-2-ff6b6b.svg" alt="Games shipped: 2">
   <img src="https://img.shields.io/badge/agents-Claude%20Code%20%2B%20Codex-6e56cf.svg" alt="Agents: Claude Code and Codex">
 </p>
 
 <p align="center">
-  <img src="docs/images/gameplay.gif" width="480" alt="TILE HOP, the example game, running in an emulator">
+  <img src="docs/images/bungeoppang-plus-gameplay.gif" width="320" alt="Bungeoppang Tycoon Plus running: a night-market stall, four griddle moulds, a customer order and a sale">
+</p>
+<p align="center">
+  <em>Bungeoppang Tycoon Plus — built with this kit, captured from the released ROM.
+  <a href="https://github.com/dong3789/bungeoppang-tycoon-plus-gbc">repo</a> ·
+  <a href="https://github.com/dong3789/bungeoppang-tycoon-plus-gbc/releases/tag/v1.0">play it</a></em>
 </p>
 
-One skill document (`SKILL.md`), three automation tools, and an example game that has actually been built and playtested.
+One skill document (`SKILL.md`), three automation tools, a starter template — and **two complete games that shipped**, both playable on the handheld in your bag right now.
 
 It takes the workflow OpenAI × ModRetro's [Chromatic](https://openai.com/en-US/supply/co-lab/chromatic/) (a Game Boy hardware-compatible handheld) showed off — the AI writes C, GBDK burns a ROM, and the emulator's frames get checked by eye — and makes it run on hardware you already own instead of a $200 device.
 
 `R36S · Miyoo Mini · Anbernic · iPhone (Delta) · desktop and web emulators · real hardware` — one `.gbc` file runs on all of them.
+
+---
+
+## Showcase — made with this kit
+
+Two games, both released as `.gbc`. They came out of the same loop this repo enforces: write C against `SKILL.md`, compile with GBDK-2020, replay the ROM headlessly with `tools/playtest.py`, look at the frames, fix, repeat. Every animation and strip below was captured from the **released ROM**, not drawn as a mockup.
+
+### 1. Bungeoppang Tycoon Plus
+
+> A night-market fish-bread stall, 90 seconds on the clock.
+
+[Repository](https://github.com/dong3789/bungeoppang-tycoon-plus-gbc) · [Release v1.0 · `bungeoppang-plus.gbc` (32 KiB)](https://github.com/dong3789/bungeoppang-tycoon-plus-gbc/releases/tag/v1.0)
+
+| | |
+| --- | --- |
+| Genre | 90-second score-attack cooking sim |
+| The loop | Four griddle moulds, four fillings — BEAN / CREAM / CHEESE / PIZZA. Pour batter, wait for golden brown, sell the filling the customer actually ordered |
+| Controls | D-pad: pick a mould · **A**: pour / serve / scrape a burnt one · **B**: change filling (hold to repeat) · **SELECT**: reverse · **START**: start, restart |
+| Depth | Customers walk in with a filling and a patience bar, combos build with every correct sale, and the shift ends in an S/A/B/C rank on your takings (S = 6000 gold) |
+| Hardware budget | 246 of the 256 background tile indices, 28 of the 40 OAM sprites. The four fillings share one set of tiles and differ by palette only — switching costs no VRAM |
+| ROM | CGB-only (`0xC0`), 32 KiB, MBC5+RAM+battery (`0x1B`) |
+
+<p align="center"><img src="docs/images/bungeoppang-plus-strip.png" width="848" alt="Five frames from Bungeoppang Tycoon Plus: title, a customer asking for a filling, batter poured into three moulds, golden, and a sale for 100 gold"></p>
+
+The strip is five frames pulled from the released ROM: the title card, a customer asking for CREAM, batter poured into three moulds, golden, and the sale (`GOLD 100 · COMBO 1`).
+
+### 2. Ramen Time
+
+> Three rounds, five steps, one button — and a cursor that is faster than you.
+
+[Repository](https://github.com/dong3789/ramen-time-gbc) · [Release v1.0 · `ramen-time.gbc` (32 KiB)](https://github.com/dong3789/ramen-time-gbc/releases/tag/v1.0)
+
+| | |
+| --- | --- |
+| Genre | Timing / rhythm cooking game |
+| The loop | **BOIL → NOODLES → SOUP → TOPPING → STOP**, five times per round, three rounds. Hit the moving cursor inside the green window |
+| Controls | **A**: hit the timing (and drop the egg on TOPPING) · **B**: add spring onion · **START**: start / play again · **SELECT**: back to the title |
+| Depth | Perfect is the middle 16 px of a 112 px gauge (100 pts), GOOD is 60, a miss is 0; the cursor is 1 px / 2 frames in round 1, 1 px / frame in round 2, 2 px / frame in round 3; stop too early and the noodles are HARD, too late and they are SOGGY. 1260 is a perfect run |
+| Hardware budget | 215 background + 3 sprite tiles of the 384 VRAM slots, 3 of the 40 OAM sprites — the pot changes by swapping one tile row per phase |
+| ROM | CGB-enhanced (`0x80`), 32 KiB, MBC5+RAM+battery (`0x1B`) |
+
+<p align="center"><img src="docs/images/ramen-time-gameplay.gif" width="320" alt="Ramen Time running: the pot boils, the timing cursor sweeps the gauge, PERFECT at 100 points, then the noodles go in"></p>
+
+<p align="center"><img src="docs/images/ramen-time-strip.png" width="848" alt="Five frames from Ramen Time: title, BOIL with the cursor moving, PERFECT +100, NOODLES, and the results card with rating S and 1260 points"></p>
+
+The results card at the right is a real 15-phase run driven by reading the cursor sprite out of the emulator's memory: rating **S**, score **1260**, *PERFECT NOODLES*.
+
+**What the two games have in common is the point:** a full input→score→rank loop, palette-only art variation, and a playtest strip a human can actually read. That is the bar this kit holds you to.
 
 ---
 
@@ -30,7 +84,7 @@ git clone https://github.com/dong3789/retro-game-creator.git
 cd retro-game-creator
 
 ./tools/check_env.sh                 # GBDK, python, pillow, pyboy
-./templates/minimal-gbc/build.sh     # build the example ROM → build/tile-hop.gbc
+./templates/minimal-gbc/build.sh     # build the starter ROM → build/tile-hop.gbc
 
 python3 tools/playtest.py --rom templates/minimal-gbc/build/tile-hop.gbc \
   --script "wait:8,press:start:4,wait:16,hold:right:36,snap:score" \
@@ -42,9 +96,9 @@ Open `build/strip.png`. That is the game.
 Get GBDK-2020 from the [releases page](https://github.com/gbdk-2020/gbdk-2020/releases), unpack it anywhere, and
 `export GBDKDIR=/path/to/gbdk/` (**keep the trailing `/`**). `build.sh` also looks in `/opt/gbdk`, `~/gbdk` and a few other places, and builds fine without `make`.
 
-## The example game — TILE HOP
+## Minimal starter template — TILE HOP
 
-Not an empty shell: a game that goes all the way from title screen to play, score and clear. Copy it and start changing things.
+`templates/minimal-gbc/` is the base you copy. It is not an empty shell: it goes from title screen to play, score and clear, so every piece you need to keep (vsync loop, joypad edge detection, tile map, sprite, sound, HUD) is already wired.
 
 | | |
 | --- | --- |
@@ -57,13 +111,13 @@ Not an empty shell: a game that goes all the way from title screen to play, scor
 | --- | --- | --- |
 | ![title](docs/images/title-screen.png) | ![strip](docs/images/playtest-strip.png) | ![clear](docs/images/clear-screen.png) |
 
-The strip on the right is frames `tools/playtest.py` captured while actually running the ROM —
+The middle strip is frames `tools/playtest.py` captured while actually running the ROM —
 title → start → walk right and grab a star (SCORE 00→01, STAR 6→5) → move → back to the title.
 **"It renders on screen" is the bar, not "it compiled."**
 
 ## Run it anywhere
 
-`.gbc` is a standard Game Boy Color ROM, so the same file runs everywhere below.
+`.gbc` is a standard Game Boy Color ROM, so the same file runs everywhere below — including the two showcase games above.
 
 | Device | How |
 | --- | --- |
@@ -94,10 +148,14 @@ tools/
   artfont.py              draw logos and text into a PNG with a 5×7 pixel font
   playtest.py             headless PyBoy run + key-input script + screenshot strip
   check_env.sh            check GBDK / python / pillow / pyboy
-templates/minimal-gbc/    the working example game "TILE HOP" (title → play → score → clear)
-docs/images/              review screenshots (including the GIF above)
+templates/minimal-gbc/    the starter game "TILE HOP" (title → play → score → clear)
+docs/images/              screenshots and GIFs captured from real ROMs (both showcase games + TILE HOP)
 docs/ci.md                the full CI workflow + how to register it once (not in the repo yet)
 ```
+
+The two showcase games live in their own repositories —
+[`bungeoppang-tycoon-plus-gbc`](https://github.com/dong3789/bungeoppang-tycoon-plus-gbc) and
+[`ramen-time-gbc`](https://github.com/dong3789/ramen-time-gbc) — with their full source, build scripts and `docs/` screenshots.
 
 ## Hook it up to your agent
 
@@ -119,6 +177,8 @@ a `vsync()` loop, CGB register guards, and **always look at the playtest strip a
 5. **Playtest** — run a key-input script → get a strip PNG
 6. **Open the strip yourself** → fix and repeat
 7. **Keep the evidence** — strips and screenshots in `docs/images/`, linked from the README
+
+Both showcase games went through this loop until the strip was worth looking at. When the automation is worth more than a screenshot, read the game's own state at runtime instead of guessing: the Ramen Time GIF above was driven by reading the timing cursor out of the sprite attribute table and pressing `A` inside the perfect window, and the Bungeoppang GIF by sampling the customer's order from the framebuffer and picking that filling with `B`.
 
 ## Three tools
 

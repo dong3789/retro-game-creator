@@ -8,18 +8,72 @@
   <a href="../LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/output-.gbc-8b6b2e.svg" alt="Output: .gbc ROM">
   <img src="https://img.shields.io/badge/compiler-GBDK--2020%204.5.0-2f9e44.svg" alt="Compiler: GBDK-2020 4.5.0">
+  <img src="https://img.shields.io/badge/games_shipped-2-ff6b6b.svg" alt="Games shipped: 2">
   <img src="https://img.shields.io/badge/agents-Claude%20Code%20%2B%20Codex-6e56cf.svg" alt="Agents: Claude Code and Codex">
 </p>
 
 <p align="center">
-  <img src="images/gameplay.gif" width="480" alt="예제 게임 TILE HOP이 에뮬레이터에서 돌아가는 모습">
+  <img src="images/bungeoppang-plus-gameplay.gif" width="320" alt="붕어빵 타이쿤 Plus가 돌아가는 모습 — 밤시장 가게, 석쇠 틀 네 개, 손님 주문과 판매">
+</p>
+<p align="center">
+  <em>붕어빵 타이쿤 Plus — 이 킷으로 만들고, 공개된 롬에서 그대로 캡처했습니다.
+  <a href="https://github.com/dong3789/bungeoppang-tycoon-plus-gbc">저장소</a> ·
+  <a href="https://github.com/dong3789/bungeoppang-tycoon-plus-gbc/releases/tag/v1.0">바로 플레이</a></em>
 </p>
 
-스킬 문서 하나(`SKILL.md`)와 자동화 도구 3개, 그리고 **실제로 빌드·플레이테스트를 통과한 예제 게임**이 들어 있는 오픈 스킬킷입니다.
+스킬 문서 하나(`SKILL.md`)와 자동화 도구 3개, 시작용 템플릿 — 그리고 **실제로 세상에 나간 게임 두 개**가 들어 있습니다. 둘 다 지금 가방에 있는 휴대기에서 바로 돌아갑니다.
 
 OpenAI × ModRetro의 [Chromatic](https://openai.com/ko-KR/supply/co-lab/chromatic/)(게임보이 하드웨어 호환 휴대기기)이 보여 준 "AI가 C를 쓰고 → GBDK로 ROM을 굽고 → 에뮬레이터 프레임을 눈으로 검수한다"는 흐름을, $200 기기를 사지 않고 이미 있는 기기에서 그대로 쓰도록 만들었습니다.
 
 `R36S · Miyoo Mini · Anbernic · iPhone(Delta) · PC/웹 에뮬레이터 · 실기` — `.gbc` 파일 하나로 전부 돌아갑니다.
+
+---
+
+## 쇼케이스 — 이 킷으로 만든 게임
+
+게임 두 개, 둘 다 `.gbc`로 공개했습니다. 이 저장소가 강제하는 것과 똑같은 루프에서 나왔습니다: `SKILL.md`를 보고 C를 쓰고, GBDK-2020으로 컴파일하고, `tools/playtest.py`로 롬을 헤드리스 재생하고, 프레임을 눈으로 보고, 고치고, 반복. 아래 움직이는 화면과 스트립은 전부 **공개된 롬**에서 캡처한 것이지, 목업이 아닙니다.
+
+### 1. 붕어빵 타이쿤 Plus
+
+> 밤시장 붕어빵 가게, 제한 시간 90초.
+
+[저장소](https://github.com/dong3789/bungeoppang-tycoon-plus-gbc) · [릴리스 v1.0 · `bungeoppang-plus.gbc` (32 KiB)](https://github.com/dong3789/bungeoppang-tycoon-plus-gbc/releases/tag/v1.0)
+
+| | |
+| --- | --- |
+| 장르 | 90초 점수 공략 요리 게임 |
+| 루프 | 석쇠에 틀 네 개, 속재료는 BEAN / CREAM / CHEESE / PIZZA. 반죽을 붓고, 황금색이 되면 손님이 시킨 속으로 팝니다 |
+| 조작 | 십자 버튼: 틀 선택 · **A**: 붓기 / 판매 / 탄 것 긁기 · **B**: 속 바꾸기(길게 누르면 반복) · **SELECT**: 반대 방향 · **START**: 시작·다시 하기 |
+| 깊이 | 손님은 속재료와 인내심 게이지를 들고 옵니다. 제대로 팔 때마다 콤보가 쌓이고, 90초가 끝나면 매출로 S/A/B/C 등급(S = 6000골드) |
+| 하드웨어 예산 | 배경 타일 인덱스 256개 중 246개, OAM 스프라이트 40개 중 28개. 속재료 네 가지는 타일을 공유하고 팔레트만 바꿔 그립니다 — 전환에 VRAM이 들지 않습니다 |
+| 롬 | CGB 전용(`0xC0`), 32 KiB, MBC5+RAM+배터리(`0x1B`) |
+
+<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="붕어빵 타이쿤 Plus의 다섯 장면: 타이틀, 속재료를 요구하는 손님, 반죽을 부은 세 틀, 황금색, 100골드 판매"></p>
+
+스트립은 공개된 롬에서 뽑은 다섯 프레임입니다: 타이틀 화면, CREAM을 요구하는 손님, 반죽을 부은 세 틀, 황금색, 그리고 판매(`GOLD 100 · COMBO 1`).
+
+### 2. RAMEN TIME
+
+> 세 라운드, 다섯 단계, 버튼 하나 — 그리고 당신보다 빠른 커서.
+
+[저장소](https://github.com/dong3789/ramen-time-gbc) · [릴리스 v1.0 · `ramen-time.gbc` (32 KiB)](https://github.com/dong3789/ramen-time-gbc/releases/tag/v1.0)
+
+| | |
+| --- | --- |
+| 장르 | 타이밍·리듬 요리 게임 |
+| 루프 | **BOIL → NOODLES → SOUP → TOPPING → STOP**, 라운드마다 다섯 단계, 세 라운드. 움직이는 커서가 초록 구간에 있을 때 누릅니다 |
+| 조작 | **A**: 타이밍 맞추기(TOPPING에서는 계란) · **B**: 파 넣기 · **START**: 시작 / 다시 하기 · **SELECT**: 타이틀로 |
+| 깊이 | 112픽셀 게이지 가운데 16픽셀이 PERFECT(100점), GOOD은 60점, 빗나가면 0점. 커서 속도는 1라운드 2프레임당 1픽셀, 2라운드 프레임당 1픽셀, 3라운드 프레임당 2픽셀. 너무 빨리 멈추면 면이 HARD, 늦으면 SOGGY. 만점은 1260점 |
+| 하드웨어 예산 | VRAM 384칸 중 배경 215 + 스프라이트 3, OAM 40개 중 3개 — 단계마다 냄비 타일 한 줄만 바꿔 그립니다 |
+| 롬 | CGB 대응(`0x80`), 32 KiB, MBC5+RAM+배터리(`0x1B`) |
+
+<p align="center"><img src="images/ramen-time-gameplay.gif" width="320" alt="RAMEN TIME이 돌아가는 모습 — 냄비가 끓고, 커서가 게이지를 지나가고, PERFECT 100점, 이어서 면이 들어갑니다"></p>
+
+<p align="center"><img src="images/ramen-time-strip.png" width="848" alt="RAMEN TIME의 다섯 장면: 타이틀, 커서가 움직이는 BOIL, PERFECT +100, NOODLES, 등급 S·1260점 결과 카드"></p>
+
+맨 오른쪽 결과 카드는 에뮬레이터 메모리에서 커서 스프라이트를 읽어 15단계를 실제로 플레이한 결과입니다: 등급 **S**, 점수 **1260**, *PERFECT NOODLES*.
+
+**두 게임의 공통점이 핵심입니다:** 입력 → 점수 → 등급까지 도는 완결된 루프, 팔레트만 바꾸는 아트 변주, 그리고 사람이 실제로 읽을 수 있는 플레이테스트 스트립. 이 킷이 요구하는 기준이 그것입니다.
 
 ---
 
@@ -42,9 +96,9 @@ python3 tools/playtest.py --rom templates/minimal-gbc/build/tile-hop.gbc \
 GBDK-2020은 [릴리스](https://github.com/gbdk-2020/gbdk-2020/releases)에서 받아 아무 데나 풀고
 `export GBDKDIR=/경로/gbdk/` (**끝에 `/` 꼭**) 하면 됩니다. `build.sh`가 `/opt/gbdk`, `~/gbdk` 등도 알아서 찾고, `make`가 없어도 빌드됩니다.
 
-## 예제 게임 — TILE HOP
+## 시작용 템플릿 — TILE HOP
 
-빈 껍데기가 아니라, 타이틀 → 플레이 → 점수 → 클리어가 끝까지 도는 게임 하나가 들어 있습니다. 복사해서 고치면 됩니다.
+`templates/minimal-gbc/`는 복사해서 시작하는 베이스입니다. 빈 껍데기가 아니라 타이틀 → 플레이 → 점수 → 클리어까지 도는 게임이라, 남겨야 할 조각(vsync 루프, 조이패드 엣지 검출, 타일맵, 스프라이트, 사운드, HUD)이 이미 다 붙어 있습니다.
 
 | | |
 | --- | --- |
@@ -57,13 +111,13 @@ GBDK-2020은 [릴리스](https://github.com/gbdk-2020/gbdk-2020/releases)에서 
 | --- | --- | --- |
 | ![title](images/title-screen.png) | ![strip](images/playtest-strip.png) | ![clear](images/clear-screen.png) |
 
-오른쪽 스트립은 `tools/playtest.py`가 실제로 ROM을 돌리며 찍은 프레임입니다 —
+가운데 스트립은 `tools/playtest.py`가 실제로 ROM을 돌리며 찍은 프레임입니다 —
 타이틀 → 시작 → 오른쪽으로 걸어가 별 획득(SCORE 00→01, STAR 6→5) → 이동 → 타이틀 복귀.
 **"빌드됐다"가 아니라 "화면에서 확인했다"** 가 이 킷의 기준입니다.
 
 ## 어디서나 실행하기
 
-`.gbc`는 표준 게임보이 컬러 롬이라, 같은 파일이 아래 어디서든 그대로 돕니다.
+`.gbc`는 표준 게임보이 컬러 롬이라, 같은 파일이 아래 어디서든 그대로 돕니다 — 위의 쇼케이스 게임 두 개도 마찬가지입니다.
 
 | 기기 | 방법 |
 | --- | --- |
@@ -77,7 +131,7 @@ GBDK-2020은 [릴리스](https://github.com/gbdk-2020/gbdk-2020/releases)에서 
 
 1. 마이크로SD를 PC에 꽂고 **EASYROMS** 파티션을 엽니다 (`BOOT` 파티션이 아닙니다).
 2. GBC 폴더에 `.gbc`를 복사합니다 — 보통 `EASYROMS/roms/gbc/` (이미지에 따라 `EASYROMS/gbc/`).
-   폴더 이름은 소문자·대소문자를 구분합니다. 게임이 안 보이면 롬이 아니라 폴더가 틀린 겁니다.
+   폴더 이름은 대소문자를 구분합니다. 게임이 안 보이면 롬이 아니라 폴더가 틀린 겁니다.
 3. 실행. 코어는 **Gambatte**(기본, 무난) 또는 **SameBoy**(가장 정확).
 4. 화면 설정: GBC는 160×144 = 정확히 **10:9**, R36S 패널은 640×480(4:3)입니다.
    `설정 → 비디오 → 스케일링`에서 **Aspect Ratio: Core Provided + Integer Scale: ON → 480×432 (3배)**.
@@ -94,10 +148,14 @@ tools/
   artfont.py              5×7 픽셀 폰트로 로고·문구를 PNG에 그리기
   playtest.py             PyBoy 헤드리스 실행 + 키 입력 시퀀스 + 스크린샷 스트립
   check_env.sh            GBDK / python / pillow / pyboy 점검
-templates/minimal-gbc/    실제로 도는 예제 게임 "TILE HOP" (타이틀 → 플레이 → 점수 → 클리어)
-docs/images/              검수 스크린샷 (위 GIF 포함)
+templates/minimal-gbc/    시작용 게임 "TILE HOP" (타이틀 → 플레이 → 점수 → 클리어)
+docs/images/              실제 롬에서 캡처한 화면과 GIF (쇼케이스 두 게임 + TILE HOP)
 docs/ci.md                CI 워크플로 전문 + 1회 등록 방법 (아직 저장소에 미등록)
 ```
+
+쇼케이스 게임 두 개는 각자 저장소에 있습니다 —
+[`bungeoppang-tycoon-plus-gbc`](https://github.com/dong3789/bungeoppang-tycoon-plus-gbc),
+[`ramen-time-gbc`](https://github.com/dong3789/ramen-time-gbc) — 소스, 빌드 스크립트, `docs/` 스크린샷까지 전부 들어 있습니다.
 
 ## AI 에이전트에 붙이기
 
@@ -119,6 +177,8 @@ docs/ci.md                CI 워크플로 전문 + 1회 등록 방법 (아직 �
 5. **플레이테스트** — 키 입력 스크립트 실행 → 스트립 PNG 생성
 6. **스트립을 직접 열어 검수** → 고치고 반복
 7. **증거 남기기** — 스트립/스크린샷을 `docs/images/`에, README에 링크
+
+쇼케이스 게임 두 개도 스트립이 볼 만해질 때까지 이 루프를 돌았습니다. 스크린샷보다 자동화가 더 값어치 있을 때는, 추측 대신 게임 상태를 실행 중에 직접 읽으면 됩니다. 위의 RAMEN TIME GIF는 스프라이트 속성 테이블에서 타이밍 커서 위치를 읽어 PERFECT 구간에서 `A`를 누르게 만들었고, 붕어빵 GIF는 화면에서 손님 주문을 샘플링해 그 속재료를 `B`로 고르게 만들었습니다.
 
 ## 도구 세 개
 
