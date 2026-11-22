@@ -48,9 +48,9 @@ Dois jogos, ambos publicados como `.gbc`. Saíram do mesmo ciclo que este reposi
 | Orçamento de hardware | 246 dos 256 índices de tile de fundo, 28 dos 40 sprites de OAM. Os quatro recheios compartilham os mesmos tiles e mudam só pela paleta — trocar não custa VRAM |
 | ROM | Só CGB (`0xC0`), 32 KiB, MBC5+RAM+bateria (`0x1B`) |
 
-<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="Cinco quadros de Bungeoppang Tycoon Plus: título, um cliente pedindo um recheio, massa em três formas, dourado e uma venda de 100 de ouro"></p>
+<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="Cinco quadros de Bungeoppang Tycoon Plus: título, um cliente pedindo um recheio, massa na primeira forma, dourado e uma venda de 100 de ouro"></p>
 
-A tira são cinco quadros tirados do ROM publicado: a tela de título, um cliente pedindo CREAM, massa em três formas, o dourado e a venda (`GOLD 100 · COMBO 1`).
+A tira são cinco quadros tirados do ROM publicado: a tela de título, um cliente pedindo CREAM, massa na primeira forma, o dourado e a venda (`GOLD 100 · COMBO 1`).
 
 ### 2. Ramen Time
 

@@ -48,9 +48,9 @@ Two games, both released as `.gbc`. They came out of the same loop this repo enf
 | Hardware budget | 246 of the 256 background tile indices, 28 of the 40 OAM sprites. The four fillings share one set of tiles and differ by palette only — switching costs no VRAM |
 | ROM | CGB-only (`0xC0`), 32 KiB, MBC5+RAM+battery (`0x1B`) |
 
-<p align="center"><img src="docs/images/bungeoppang-plus-strip.png" width="848" alt="Five frames from Bungeoppang Tycoon Plus: title, a customer asking for a filling, batter poured into three moulds, golden, and a sale for 100 gold"></p>
+<p align="center"><img src="docs/images/bungeoppang-plus-strip.png" width="848" alt="Five frames from Bungeoppang Tycoon Plus: title, a customer asking for a filling, batter in the first mould, golden, and a sale for 100 gold"></p>
 
-The strip is five frames pulled from the released ROM: the title card, a customer asking for CREAM, batter poured into three moulds, golden, and the sale (`GOLD 100 · COMBO 1`).
+The strip is five frames pulled from the released ROM: the title card, a customer asking for CREAM, batter in the first mould, golden, and the sale (`GOLD 100 · COMBO 1`).
 
 ### 2. Ramen Time
 

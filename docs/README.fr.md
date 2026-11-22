@@ -48,9 +48,9 @@ Deux jeux, tous deux publiés en `.gbc`. Ils sortent de la même boucle que ce d
 | Budget matériel | 246 des 256 indices de tuiles de fond, 28 des 40 sprites OAM. Les quatre garnitures partagent les mêmes tuiles et ne diffèrent que par la palette — changer ne coûte aucune VRAM |
 | ROM | CGB uniquement (`0xC0`), 32 Kio, MBC5+RAM+pile (`0x1B`) |
 
-<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="Cinq images de Bungeoppang Tycoon Plus : titre, un client qui demande une garniture, la pâte versée dans trois moules, le doré, une vente à 100 pièces"></p>
+<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="Cinq images de Bungeoppang Tycoon Plus : titre, un client qui demande une garniture, la pâte dans le premier moule, le doré, une vente à 100 pièces"></p>
 
-La bande, ce sont cinq images tirées de la ROM publiée : l'écran-titre, un client qui demande CREAM, la pâte versée dans trois moules, le doré, et la vente (`GOLD 100 · COMBO 1`).
+La bande, ce sont cinq images tirées de la ROM publiée : l'écran-titre, un client qui demande CREAM, la pâte dans le premier moule, le doré, et la vente (`GOLD 100 · COMBO 1`).
 
 ### 2. Ramen Time
 

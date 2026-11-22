@@ -48,9 +48,9 @@ OpenAI × ModRetro の [Chromatic](https://openai.com/en-US/supply/co-lab/chroma
 | ハードウェア予算 | 背景タイル番号 256 個のうち 246、OAM スプライト 40 個のうち 28。具 4 種はタイルを共有し、パレットだけ差し替えます — 切り替えに VRAM は不要 |
 | ROM | CGB 専用（`0xC0`）、32 KiB、MBC5+RAM+電池（`0x1B`） |
 
-<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="Bungeoppang Tycoon Plus の 5 コマ: タイトル、具を注文する客、生地を流した 3 つの型、きつね色、100 ゴールドの会計"></p>
+<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="Bungeoppang Tycoon Plus の 5 コマ: タイトル、具を注文する客、最初の型に生地を流したところ、きつね色、100 ゴールドの会計"></p>
 
-ストリップは公開 ROM から抜いた 5 コマです。タイトル画面、CREAM を注文する客、生地を流した 3 つの型、きつね色、そして販売（`GOLD 100 · COMBO 1`）。
+ストリップは公開 ROM から抜いた 5 コマです。タイトル画面、CREAM を注文する客、最初の型に生地を流したところ、きつね色、そして販売（`GOLD 100 · COMBO 1`）。
 
 ### 2. RAMEN TIME
 

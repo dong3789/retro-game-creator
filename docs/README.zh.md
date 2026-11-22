@@ -48,9 +48,9 @@
 | 硬件预算 | 背景图块索引 256 个中的 246 个，OAM 精灵 40 个中的 28 个。四种馅料共用同一套图块，只换调色板——切换不占 VRAM |
 | ROM | 仅 CGB（`0xC0`），32 KiB，MBC5+RAM+电池（`0x1B`） |
 
-<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="《鲷鱼烧大亨 Plus》的五个画面：标题、顾客点单、倒好面糊的三个模具、金黄、卖出 100 金"></p>
+<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="《鲷鱼烧大亨 Plus》的五个画面：标题、顾客点单、第一个模具里的面糊、金黄、卖出 100 金"></p>
 
-条带是从已发布 ROM 里抽出的五帧：标题画面、顾客要 CREAM、倒好面糊的三个模具、金黄、以及成交（`GOLD 100 · COMBO 1`）。
+条带是从已发布 ROM 里抽出的五帧：标题画面、顾客要 CREAM、第一个模具里的面糊、金黄、以及成交（`GOLD 100 · COMBO 1`）。
 
 ### 2. RAMEN TIME
 

@@ -48,9 +48,9 @@ OpenAI × ModRetro의 [Chromatic](https://openai.com/ko-KR/supply/co-lab/chromat
 | 하드웨어 예산 | 배경 타일 인덱스 256개 중 246개, OAM 스프라이트 40개 중 28개. 속재료 네 가지는 타일을 공유하고 팔레트만 바꿔 그립니다 — 전환에 VRAM이 들지 않습니다 |
 | 롬 | CGB 전용(`0xC0`), 32 KiB, MBC5+RAM+배터리(`0x1B`) |
 
-<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="붕어빵 타이쿤 Plus의 다섯 장면: 타이틀, 속재료를 요구하는 손님, 반죽을 부은 세 틀, 황금색, 100골드 판매"></p>
+<p align="center"><img src="images/bungeoppang-plus-strip.png" width="848" alt="붕어빵 타이쿤 Plus의 다섯 장면: 타이틀, 속재료를 요구하는 손님, 반죽을 부은 첫 틀, 황금색, 100골드 판매"></p>
 
-스트립은 공개된 롬에서 뽑은 다섯 프레임입니다: 타이틀 화면, CREAM을 요구하는 손님, 반죽을 부은 세 틀, 황금색, 그리고 판매(`GOLD 100 · COMBO 1`).
+스트립은 공개된 롬에서 뽑은 다섯 프레임입니다: 타이틀 화면, CREAM을 요구하는 손님, 반죽을 부은 첫 틀, 황금색, 그리고 판매(`GOLD 100 · COMBO 1`).
 
 ### 2. RAMEN TIME
 
